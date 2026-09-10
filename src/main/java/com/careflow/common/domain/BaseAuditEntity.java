@@ -42,7 +42,7 @@ public abstract class BaseAuditEntity {
      */
     @Version
     @Column(name = "version", nullable = false)
-    private Long version = 0L;
+    private Long version;
 
     public Instant getCreatedAt() {
         return createdAt;
