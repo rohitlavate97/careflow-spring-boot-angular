@@ -91,7 +91,25 @@ mvn spring-boot:run -Dspring-boot.run.profiles=local
 
 ---
 
+## Demo Accounts (§101)
+
+The database is provisioned via Flyway (`V3__seed_demo_accounts.sql`) with synthetic demo credentials for evaluation and testing:
+
+| Role | Username / Email | Password | Primary Clearance |
+|---|---|---|---|
+| **Administrator** | `admin@careflow.local` | `Admin@123` | Full system settings, audit logs, and administration |
+| **Doctor** | `doctor@careflow.local` | `Doctor@123` | Patient encounters, prescriptions, and lab orders |
+| **Nurse** | `nurse@careflow.local` | `Nurse@123` | Patient vitals, triage, and queue check-ins |
+| **Receptionist** | `receptionist@careflow.local` | `Receptionist@123` | Patient registration, queue allocation, scheduling |
+| **Pharmacist** | `pharmacist@careflow.local` | `Pharmacist@123` | Inventory decrements and prescription dispensing |
+| **Lab Technician**| `lab@careflow.local` | `Lab@123` | Specimen collection, lab processing, and results |
+| **Billing Officer**| `billing@careflow.local` | `Billing@123` | Invoices, fee schedules, and payment processing |
+
+---
+
 ## Architectural Decision Records (ADRs)
 
 Key architectural decisions are documented under [`docs/adr/`](docs/adr/):
 - [`ADR-0001: Modular Monolith Architecture`](docs/adr/0001-modular-monolith-architecture.md)
+- [`ADR-0005: Stateless JWT Authentication & RBAC Architecture`](docs/adr/0005-jwt-stateless-authentication.md)
+
