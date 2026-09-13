@@ -113,4 +113,5 @@ Key architectural decisions are documented under [`docs/adr/`](docs/adr/):
 - [`ADR-0001: Modular Monolith Architecture`](docs/adr/0001-modular-monolith-architecture.md)
 - [`ADR-0005: Stateless JWT Authentication & RBAC Architecture`](docs/adr/0005-jwt-stateless-authentication.md)
 - [`ADR-0007: Consultation Lifecycle and Clinical Records Architecture`](docs/adr/0007-consultation-and-clinical-records-architecture.md)
+- [`ADR-0008: Pharmacy Inventory and Concurrency Control Architecture`](docs/adr/0008-pharmacy-inventory-and-concurrency-control.md)
 
