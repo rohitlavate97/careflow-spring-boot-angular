@@ -115,4 +115,5 @@ Key architectural decisions are documented under [`docs/adr/`](docs/adr/):
 - [`ADR-0007: Consultation Lifecycle and Clinical Records Architecture`](docs/adr/0007-consultation-and-clinical-records-architecture.md)
 - [`ADR-0008: Pharmacy Inventory and Concurrency Control Architecture`](docs/adr/0008-pharmacy-inventory-and-concurrency-control.md)
 - [`ADR-0009: Laboratory Workflow and Specimen Lifecycle Architecture`](docs/adr/0009-laboratory-workflow-and-specimen-lifecycle.md)
+- [`ADR-0010: Inpatient Admission and Bed Concurrency Architecture`](docs/adr/0010-inpatient-admission-and-bed-concurrency.md)
 
