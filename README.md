@@ -112,4 +112,5 @@ The database is provisioned via Flyway (`V3__seed_demo_accounts.sql`) with synth
 Key architectural decisions are documented under [`docs/adr/`](docs/adr/):
 - [`ADR-0001: Modular Monolith Architecture`](docs/adr/0001-modular-monolith-architecture.md)
 - [`ADR-0005: Stateless JWT Authentication & RBAC Architecture`](docs/adr/0005-jwt-stateless-authentication.md)
+- [`ADR-0007: Consultation Lifecycle and Clinical Records Architecture`](docs/adr/0007-consultation-and-clinical-records-architecture.md)
 

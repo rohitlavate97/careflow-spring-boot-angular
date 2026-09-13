@@ -165,7 +165,7 @@ class QueueEntryRepositoryTest {
     @DisplayName("countPatientsAhead should correctly count higher priority or earlier patients (§21)")
     void countPatientsAhead_shouldCalculateAccurately() {
         LocalDate date = LocalDate.now();
-        Instant baseTime = Instant.now();
+        Instant baseTime = Instant.now().truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
 
         QueueEntry emergency = new QueueEntry(
                 UUID.randomUUID().toString(), testDept.getId(), null, patient1.getId(), null,
