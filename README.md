@@ -117,6 +117,7 @@ Key architectural decisions are documented under [`docs/adr/`](docs/adr/):
 - [`ADR-0009: Laboratory Workflow and Specimen Lifecycle Architecture`](docs/adr/0009-laboratory-workflow-and-specimen-lifecycle.md)
 - [`ADR-0010: Inpatient Admission and Bed Concurrency Architecture`](docs/adr/0010-inpatient-admission-and-bed-concurrency.md)
 - [`ADR-0011: Billing Invoicing and Payment Idempotency Architecture`](docs/adr/0011-billing-invoicing-and-payment-idempotency.md)
+- [`ADR-0012: Insurance Policy and Claims Adjudication Architecture`](docs/adr/0012-insurance-policy-and-claims-adjudication.md)
 
 ---
 
