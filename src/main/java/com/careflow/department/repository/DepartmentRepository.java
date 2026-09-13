@@ -2,7 +2,9 @@ package com.careflow.department.repository;
 
 import com.careflow.department.domain.Department;
 import com.careflow.department.domain.DepartmentStatus;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -15,6 +17,10 @@ import java.util.Optional;
  */
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, String> {
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT d FROM Department d WHERE d.id = :id")
+    Optional<Department> findByIdForUpdate(@Param("id") String id);
 
     Optional<Department> findByCodeIgnoreCase(String code);
 
