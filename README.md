@@ -116,4 +116,16 @@ Key architectural decisions are documented under [`docs/adr/`](docs/adr/):
 - [`ADR-0008: Pharmacy Inventory and Concurrency Control Architecture`](docs/adr/0008-pharmacy-inventory-and-concurrency-control.md)
 - [`ADR-0009: Laboratory Workflow and Specimen Lifecycle Architecture`](docs/adr/0009-laboratory-workflow-and-specimen-lifecycle.md)
 - [`ADR-0010: Inpatient Admission and Bed Concurrency Architecture`](docs/adr/0010-inpatient-admission-and-bed-concurrency.md)
+- [`ADR-0011: Billing Invoicing and Payment Idempotency Architecture`](docs/adr/0011-billing-invoicing-and-payment-idempotency.md)
+
+---
+
+## Concurrency Labs (§57, §92)
+
+CareFlow features six dedicated multi-threaded concurrency labs demonstrating race conditions and their enterprise-grade solutions:
+- [`Lab 1: Double-Booked Appointment Prevention`](docs/concurrency/lab-1-double-booked-appointment.md)
+- [`Lab 2: Patient Queue State Transitions`](docs/concurrency/lab-2-patient-queue-race-conditions.md)
+- [`Lab 3: Pharmacy Inventory Stock Dispensation`](docs/concurrency/lab-3-pharmacy-inventory-concurrency.md)
+- [`Lab 4: Inpatient Bed Allocation Protection`](docs/concurrency/lab-4-bed-allocation-concurrency.md)
+- [`Lab 5: Payment Idempotency & Duplicate Charge Prevention`](docs/concurrency/lab-5-payment-idempotency-concurrency.md)
 
