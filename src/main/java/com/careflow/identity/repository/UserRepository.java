@@ -37,4 +37,23 @@ public interface UserRepository extends JpaRepository<User, String> {
            "LEFT JOIN FETCH r.permissions " +
            "WHERE u.email = :email")
     Optional<User> findByEmailWithRolesAndPermissions(@Param("email") String email);
+
+    @Query("SELECT u FROM User u WHERE " +
+           "(:role IS NULL OR EXISTS (SELECT r FROM u.roles r WHERE r.name = :role)) AND " +
+           "(:status IS NULL OR u.status = :status) AND " +
+           "(:search IS NULL OR LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+           "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+           "LOWER(u.firstName) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+           "LOWER(u.lastName) LIKE LOWER(CONCAT('%', :search, '%')))")
+    org.springframework.data.domain.Page<User> findUsersByAdminCriteria(
+            @Param("role") com.careflow.identity.domain.RoleType role,
+            @Param("status") com.careflow.identity.domain.UserStatus status,
+            @Param("search") String search,
+            org.springframework.data.domain.Pageable pageable
+    );
+
+    long countByStatus(com.careflow.identity.domain.UserStatus status);
+
+    @Query("SELECT r.name, COUNT(u) FROM User u JOIN u.roles r GROUP BY r.name")
+    java.util.List<Object[]> countUsersByRole();
 }
