@@ -124,6 +124,7 @@ Key architectural decisions are documented under [`docs/adr/`](docs/adr/):
 - [`ADR-0016: Operational Reporting, Clinical Throughput Analytics, and Pushdown Database Aggregations`](docs/adr/0016-operational-reporting-and-database-aggregations.md)
 - [`ADR-0017: Hospital System Administration, Dynamic Configuration Management, and Governance Architecture`](docs/adr/0017-administration-system-configuration-and-governance.md)
 - [`ADR-0018: Redis Caching and Resilient Infrastructure with Graceful Degradation`](docs/adr/0018-redis-caching-and-graceful-degradation.md)
+- [`ADR-0019: Asynchronous Domain Events, Kafka Streaming, and Transactional Outbox Architecture`](docs/adr/0019-kafka-events-and-transactional-outbox-architecture.md)
 
 ---
 

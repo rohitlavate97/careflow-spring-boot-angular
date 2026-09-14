@@ -25,6 +25,11 @@ import com.careflow.staff.exception.StaffNotFoundException;
 import com.careflow.staff.repository.StaffMemberRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.careflow.common.config.KafkaConfig;
+import com.careflow.common.event.AppointmentBookedEvent;
+import com.careflow.common.event.AppointmentCancelledEvent;
+import com.careflow.common.outbox.service.OutboxService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,17 +54,29 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final StaffMemberRepository staffMemberRepository;
     private final DepartmentService departmentService;
     private final AppointmentMapper appointmentMapper;
+    private final OutboxService outboxService;
+
+    @Autowired
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository,
+                                  PatientRepository patientRepository,
+                                  StaffMemberRepository staffMemberRepository,
+                                  DepartmentService departmentService,
+                                  AppointmentMapper appointmentMapper,
+                                  @Autowired(required = false) OutboxService outboxService) {
+        this.appointmentRepository = appointmentRepository;
+        this.patientRepository = patientRepository;
+        this.staffMemberRepository = staffMemberRepository;
+        this.departmentService = departmentService;
+        this.appointmentMapper = appointmentMapper;
+        this.outboxService = outboxService;
+    }
 
     public AppointmentServiceImpl(AppointmentRepository appointmentRepository,
                                   PatientRepository patientRepository,
                                   StaffMemberRepository staffMemberRepository,
                                   DepartmentService departmentService,
                                   AppointmentMapper appointmentMapper) {
-        this.appointmentRepository = appointmentRepository;
-        this.patientRepository = patientRepository;
-        this.staffMemberRepository = staffMemberRepository;
-        this.departmentService = departmentService;
-        this.appointmentMapper = appointmentMapper;
+        this(appointmentRepository, patientRepository, staffMemberRepository, departmentService, appointmentMapper, null);
     }
 
     @Override
@@ -93,6 +110,22 @@ public class AppointmentServiceImpl implements AppointmentService {
             // saveAndFlush triggers immediate constraint validation within transaction
             Appointment saved = appointmentRepository.saveAndFlush(appointment);
             log.info("Successfully booked appointment id='{}'", saved.getId());
+
+            if (outboxService != null) {
+                outboxService.saveEvent(
+                        new AppointmentBookedEvent(
+                                saved.getId(),
+                                saved.getPatientId(),
+                                saved.getDoctorId(),
+                                saved.getDepartmentId(),
+                                saved.getAppointmentDateTime(),
+                                saved.getDurationMinutes()
+                        ),
+                        KafkaConfig.TOPIC_APPOINTMENTS,
+                        saved.getId()
+                );
+            }
+
             return appointmentMapper.toResponse(saved);
         } catch (DataIntegrityViolationException ex) {
             // Hard database constraint uk_active_appointment_slot caught concurrent double-booking (§20, §92)
@@ -220,6 +253,20 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Appointment updated = appointmentRepository.save(appointment);
         log.info("Appointment id='{}' successfully transitioned to '{}'", updated.getId(), updated.getStatus());
+
+        if (targetStatus == AppointmentStatus.CANCELLED && outboxService != null) {
+            outboxService.saveEvent(
+                    new AppointmentCancelledEvent(
+                            updated.getId(),
+                            updated.getPatientId(),
+                            updated.getDoctorId(),
+                            reason
+                    ),
+                    KafkaConfig.TOPIC_APPOINTMENTS,
+                            updated.getId()
+            );
+        }
+
         return appointmentMapper.toResponse(updated);
     }
 

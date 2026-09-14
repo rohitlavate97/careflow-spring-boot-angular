@@ -21,4 +21,8 @@ logging:
 careflow:
   storage:
     documents-dir: ./target/test-data/documents
+  kafka:
+    enabled: false
+  outbox:
+    relay-interval-ms: 60000
 
