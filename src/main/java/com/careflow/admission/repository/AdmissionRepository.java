@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -34,4 +35,9 @@ public interface AdmissionRepository extends JpaRepository<Admission, String> {
 
     @Query("SELECT a FROM Admission a LEFT JOIN FETCH a.currentBed b LEFT JOIN FETCH b.room r LEFT JOIN FETCH r.ward w WHERE a.id = :id")
     Optional<Admission> findByIdWithBedDetails(@Param("id") String id);
+
+    long countByStatus(AdmissionStatus status);
+
+    @Query("SELECT a.status, COUNT(a) FROM Admission a GROUP BY a.status")
+    List<Object[]> countAdmissionsByStatus();
 }

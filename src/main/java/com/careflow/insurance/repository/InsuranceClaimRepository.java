@@ -37,4 +37,10 @@ public interface InsuranceClaimRepository extends JpaRepository<InsuranceClaim, 
     Page<InsuranceClaim> findByStatus(ClaimStatus status, Pageable pageable);
 
     List<InsuranceClaim> findByInvoiceId(String invoiceId);
+
+    @Query("SELECT COUNT(c), COALESCE(SUM(c.totalClaimedAmount), 0), COALESCE(SUM(c.approvedAmount), 0), " +
+           "SUM(CASE WHEN c.status = com.careflow.insurance.domain.ClaimStatus.APPROVED THEN 1 ELSE 0 END), " +
+           "SUM(CASE WHEN c.status = com.careflow.insurance.domain.ClaimStatus.REJECTED THEN 1 ELSE 0 END) " +
+           "FROM InsuranceClaim c WHERE c.createdAt >= :start AND c.createdAt <= :end")
+    List<Object[]> getInsuranceClaimAggregates(@Param("start") java.time.Instant start, @Param("end") java.time.Instant end);
 }

@@ -99,4 +99,28 @@ public interface QueueEntryRepository extends JpaRepository<QueueEntry, String> 
             String departmentId,
             LocalDate queueDate
     );
+
+    @Query("SELECT q.status, COUNT(q) FROM QueueEntry q WHERE q.queueDate = :queueDate " +
+           "AND (:departmentId IS NULL OR q.departmentId = :departmentId) " +
+           "GROUP BY q.status")
+    List<Object[]> countQueueByStatus(
+            @Param("queueDate") LocalDate queueDate,
+            @Param("departmentId") String departmentId
+    );
+
+    @Query("SELECT q.priority, COUNT(q) FROM QueueEntry q WHERE q.queueDate = :queueDate " +
+           "AND (:departmentId IS NULL OR q.departmentId = :departmentId) " +
+           "GROUP BY q.priority")
+    List<Object[]> countQueueByPriority(
+            @Param("queueDate") LocalDate queueDate,
+            @Param("departmentId") String departmentId
+    );
+
+    @Query("SELECT q.entryTime, q.calledTime FROM QueueEntry q WHERE q.queueDate = :queueDate " +
+           "AND q.calledTime IS NOT NULL " +
+           "AND (:departmentId IS NULL OR q.departmentId = :departmentId)")
+    List<Object[]> findQueueWaitTimes(
+            @Param("queueDate") LocalDate queueDate,
+            @Param("departmentId") String departmentId
+    );
 }

@@ -35,4 +35,12 @@ public interface BedRepository extends JpaRepository<Bed, String> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT b FROM Bed b WHERE b.id = :id")
     Optional<Bed> findByIdForUpdate(@Param("id") String id);
+
+    @Query("SELECT b.status, COUNT(b) FROM Bed b WHERE b.active = true GROUP BY b.status")
+    List<Object[]> countBedsByStatus();
+
+    @Query("SELECT w.id, w.name, w.wardType, COUNT(b), " +
+           "SUM(CASE WHEN b.status = com.careflow.admission.domain.BedStatus.OCCUPIED THEN 1 ELSE 0 END) " +
+           "FROM Bed b JOIN b.room r JOIN r.ward w WHERE b.active = true GROUP BY w.id, w.name, w.wardType")
+    List<Object[]> countWardBedOccupancy();
 }

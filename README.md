@@ -121,6 +121,7 @@ Key architectural decisions are documented under [`docs/adr/`](docs/adr/):
 - [`ADR-0013: Medical Document Management and Metadata Storage Architecture`](docs/adr/0013-medical-document-management-and-metadata-storage.md)
 - [`ADR-0014: Multi-Channel Notification Center and Event Abstraction Architecture`](docs/adr/0014-multi-channel-notification-center-and-event-abstraction.md)
 - [`ADR-0015: Immutable Audit Logging and HIPAA Compliance Tracking Architecture`](docs/adr/0015-audit-logging-immutability-and-compliance-tracking.md)
+- [`ADR-0016: Operational Reporting, Clinical Throughput Analytics, and Pushdown Database Aggregations`](docs/adr/0016-operational-reporting-and-database-aggregations.md)
 
 ---
 

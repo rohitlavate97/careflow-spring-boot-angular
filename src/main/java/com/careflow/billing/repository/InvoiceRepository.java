@@ -37,4 +37,17 @@ public interface InvoiceRepository extends JpaRepository<Invoice, String> {
     List<Invoice> findByEncounterId(String encounterId);
 
     List<Invoice> findByAdmissionId(String admissionId);
+
+    @Query("SELECT COALESCE(SUM(i.totalAmount), 0), COALESCE(SUM(i.paidAmount), 0), COALESCE(SUM(i.balanceDue), 0) " +
+           "FROM Invoice i WHERE i.createdAt >= :start AND i.createdAt <= :end")
+    List<Object[]> getInvoiceFinancialTotals(@Param("start") java.time.Instant start, @Param("end") java.time.Instant end);
+
+    @Query("SELECT i.status, COUNT(i) FROM Invoice i WHERE i.createdAt >= :start AND i.createdAt <= :end GROUP BY i.status")
+    List<Object[]> countInvoicesByStatus(@Param("start") java.time.Instant start, @Param("end") java.time.Instant end);
+
+    @Query("SELECT COALESCE(SUM(i.totalAmount), 0) FROM Invoice i WHERE i.createdAt >= :start AND i.createdAt <= :end")
+    java.math.BigDecimal sumTotalInvoicedInRange(@Param("start") java.time.Instant start, @Param("end") java.time.Instant end);
+
+    @Query("SELECT COALESCE(SUM(i.paidAmount), 0) FROM Invoice i WHERE i.createdAt >= :start AND i.createdAt <= :end")
+    java.math.BigDecimal sumTotalPaidInRange(@Param("start") java.time.Instant start, @Param("end") java.time.Instant end);
 }

@@ -36,4 +36,18 @@ public interface PharmacyInventoryBatchRepository extends JpaRepository<Pharmacy
     List<PharmacyInventoryBatch> findByMedicationIdOrderByExpiryDateAsc(String medicationId);
 
     Optional<PharmacyInventoryBatch> findByMedicationIdAndBatchNumber(String medicationId, String batchNumber);
+
+    @Query("SELECT COUNT(b), COALESCE(SUM(b.quantityAvailable), 0), " +
+           "SUM(CASE WHEN b.expiryDate < :currentDate THEN 1 ELSE 0 END), " +
+           "SUM(CASE WHEN b.expiryDate >= :currentDate AND b.expiryDate <= :nearExpiryDate THEN 1 ELSE 0 END), " +
+           "SUM(CASE WHEN b.quantityAvailable <= b.reorderThreshold THEN 1 ELSE 0 END), " +
+           "SUM(CASE WHEN b.quantityAvailable = 0 THEN 1 ELSE 0 END) " +
+           "FROM PharmacyInventoryBatch b")
+    List<Object[]> getPharmacyInventoryAggregates(@Param("currentDate") LocalDate currentDate, @Param("nearExpiryDate") LocalDate nearExpiryDate);
+
+    @Query("SELECT b FROM PharmacyInventoryBatch b WHERE b.quantityAvailable <= b.reorderThreshold ORDER BY b.quantityAvailable ASC")
+    List<PharmacyInventoryBatch> findCriticalStockBatches(org.springframework.data.domain.Pageable pageable);
+
+    @Query("SELECT COUNT(b) FROM PharmacyInventoryBatch b WHERE b.quantityAvailable <= b.reorderThreshold OR b.expiryDate <= :nearExpiryDate")
+    long countStockAlerts(@Param("nearExpiryDate") LocalDate nearExpiryDate);
 }
