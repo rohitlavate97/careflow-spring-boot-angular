@@ -32,8 +32,11 @@ import com.careflow.identity.domain.UserStatus;
 import com.careflow.identity.repository.RoleRepository;
 import com.careflow.identity.repository.UserRepository;
 import com.careflow.staff.repository.StaffMemberRepository;
+import com.careflow.common.config.CacheConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -98,6 +101,7 @@ public class AdministrationServiceImpl implements AdministrationService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = CacheConfig.CACHE_SYSTEM_SETTINGS, key = "'category:' + (#category != null ? #category.name() : 'ALL')")
     public List<SystemSettingResponse> getSettings(SettingCategory category) {
         List<SystemSetting> settings = category != null
                 ? systemSettingRepository.findByCategoryOrderBySettingKeyAsc(category)
@@ -110,6 +114,7 @@ public class AdministrationServiceImpl implements AdministrationService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = CacheConfig.CACHE_SYSTEM_SETTINGS, key = "#key")
     public SystemSettingResponse getSettingByKey(String key) {
         SystemSetting setting = systemSettingRepository.findBySettingKey(key)
                 .orElseThrow(() -> new ResourceNotFoundException("System setting not found with key: " + key));
@@ -117,6 +122,7 @@ public class AdministrationServiceImpl implements AdministrationService {
     }
 
     @Override
+    @CacheEvict(value = CacheConfig.CACHE_SYSTEM_SETTINGS, allEntries = true)
     public SystemSettingResponse updateSetting(String key, UpdateSystemSettingRequest request) {
         SystemSetting setting = systemSettingRepository.findBySettingKey(key)
                 .orElseThrow(() -> new ResourceNotFoundException("System setting not found with key: " + key));
@@ -150,6 +156,7 @@ public class AdministrationServiceImpl implements AdministrationService {
     }
 
     @Override
+    @CacheEvict(value = CacheConfig.CACHE_SYSTEM_SETTINGS, allEntries = true)
     public List<SystemSettingResponse> batchUpdateSettings(BatchUpdateSettingsRequest request) {
         List<SystemSettingResponse> results = new ArrayList<>();
         String currentActor = resolveCurrentActor();
@@ -318,6 +325,7 @@ public class AdministrationServiceImpl implements AdministrationService {
     }
 
     @Override
+    @CacheEvict(value = CacheConfig.CACHE_SYSTEM_SETTINGS, allEntries = true)
     public MaintenanceModeResponse setMaintenanceMode(MaintenanceModeRequest request) {
         String currentActor = resolveCurrentActor();
         boolean enabled = Boolean.TRUE.equals(request.enabled());

@@ -11,8 +11,11 @@ import com.careflow.department.exception.DepartmentNotFoundException;
 import com.careflow.department.exception.DuplicateDepartmentException;
 import com.careflow.department.mapper.DepartmentMapper;
 import com.careflow.department.repository.DepartmentRepository;
+import com.careflow.common.config.CacheConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +41,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     @Transactional
+    @CacheEvict(value = CacheConfig.CACHE_DEPARTMENTS, allEntries = true)
     public DepartmentResponse createDepartment(CreateDepartmentRequest request) {
         String normalizedCode = request.code().trim().toUpperCase();
         String normalizedName = request.name().trim();
@@ -64,6 +68,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = CacheConfig.CACHE_DEPARTMENTS, key = "#id")
     public DepartmentResponse getDepartmentById(String id) {
         log.debug("Fetching department with id='{}'", id);
         Department department = departmentRepository.findById(id)
@@ -83,6 +88,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = CacheConfig.CACHE_DEPARTMENTS, key = "'status:' + (#status != null ? #status.name() : 'ALL')")
     public List<DepartmentResponse> getAllDepartments(DepartmentStatus status) {
         log.debug("Fetching departments with status filter='{}'", status);
         List<Department> departments;
@@ -108,6 +114,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     @Transactional
+    @CacheEvict(value = CacheConfig.CACHE_DEPARTMENTS, allEntries = true)
     public DepartmentResponse updateDepartment(String id, UpdateDepartmentRequest request) {
         String normalizedName = request.name().trim();
         log.info("Updating department id='{}', name='{}'", id, normalizedName);
@@ -128,6 +135,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     @Transactional
+    @CacheEvict(value = CacheConfig.CACHE_DEPARTMENTS, allEntries = true)
     public DepartmentResponse updateDepartmentStatus(String id, UpdateDepartmentStatusRequest request) {
         log.info("Updating status of department id='{}' to '{}'", id, request.status());
 
@@ -142,6 +150,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     @Transactional
+    @CacheEvict(value = CacheConfig.CACHE_DEPARTMENTS, allEntries = true)
     public void deactivateDepartment(String id) {
         log.info("Deactivating department id='{}'", id);
         Department department = departmentRepository.findById(id)
