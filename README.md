@@ -120,6 +120,7 @@ Key architectural decisions are documented under [`docs/adr/`](docs/adr/):
 - [`ADR-0012: Insurance Policy and Claims Adjudication Architecture`](docs/adr/0012-insurance-policy-and-claims-adjudication.md)
 - [`ADR-0013: Medical Document Management and Metadata Storage Architecture`](docs/adr/0013-medical-document-management-and-metadata-storage.md)
 - [`ADR-0014: Multi-Channel Notification Center and Event Abstraction Architecture`](docs/adr/0014-multi-channel-notification-center-and-event-abstraction.md)
+- [`ADR-0015: Immutable Audit Logging and HIPAA Compliance Tracking Architecture`](docs/adr/0015-audit-logging-immutability-and-compliance-tracking.md)
 
 ---
 
